@@ -5,7 +5,6 @@ from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
-import httpx
 from pathlib import Path
 from typing import List, Optional
 import uuid
@@ -17,6 +16,9 @@ from models import (
     User, UserSession, Role, Visibility, Status, LabStatus,
     ProductListResponse, ServiceListResponse, LabListResponse
 )
+
+# Import Firebase configuration
+from firebase_config import initialize_firebase, verify_firebase_token
 
 
 ROOT_DIR = Path(__file__).parent
