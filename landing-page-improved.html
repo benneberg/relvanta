@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relvanta - Business Solutions Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --secondary: #06b6d4;
+            --teal: #14b8a6;
+            --cyan: #06b6d4;
+            --purple: #7C3AED;
+            --orange: #F59E0B;
+            --red: #FF6B6B;
+            --indigo: #6366F1;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== TOP BAR - GLASSMORPHISM ===== */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .top-bar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 8rem 2rem 4rem 2rem;
+            overflow: hidden;
+        }
+
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .hero-orb-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: -200px;
+            right: -200px;
+            animation-delay: 0s;
+        }
+
+        .hero-orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--secondary);
+            bottom: -150px;
+            left: -150px;
+            animation-delay: 5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 30px) scale(1.1); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            border-radius: 100px;
+            color: var(--secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border-color: var(--border);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--secondary);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        /* ===== SECTIONS ===== */
+        section {
+            padding: 6rem 2rem;
+            position: relative;
+            border-top: 1px solid var(--border);
+        }
+
+        section:nth-child(even) {
+            background: rgba(30, 41, 59, 0.3);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-intro {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ===== CARD GRID ===== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card-grid.cols-3 {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .card {
+            background: var(--dark-light);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color, var(--primary)), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color, var(--secondary));
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-label {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-description {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: var(--dark-light);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== TIMELINE ===== */
+        .timeline {
+            max-width: 800px;
+            margin: 3rem auto 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 12px;
+            top: 5px;
+            width: 18px;
+            height: 18px;
+            background: var(--secondary);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+        }
+
+        .timeline-phase {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(37, 99, 235, 0.2);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        /* ===== CTA BOX ===== */
+        .cta-box {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(6, 182, 212, 0.1));
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .feature-list {
+            list-style: none;
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: left;
+        }
+
+        .feature-list li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--text-muted);
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* ===== MOBILE STYLES ===== */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero {
+                padding: 6rem 1rem 3rem 1rem;
+            }
+
+            section {
+                padding: 4rem 1rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-grid.cols-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 10px;
+            }
+
+            .timeline-item {
+                padding-left: 40px;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+    </style>
+</head>
+<body>
+    <!-- TOP BAR -->
+    <nav class="top-bar">
+        <div class="top-bar-content">
+            <div class="logo">Relvanta</div>
+            <div class="nav-links">
+                <a href="#business" class="nav-link">BUSINESS</a>
+                <a href="#solutions" class="nav-link">SOLUTIONS</a>
+                <a href="#roadmap" class="nav-link">ROADMAP</a>
+                <a href="#contact" class="nav-link">CONTACT</a>
+            </div>
+            <button class="mobile-menu-btn">☰</button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-orb hero-orb-1"></div>
+        <div class="hero-orb hero-orb-2"></div>
+        <div class="container">
+            <div class="hero-content fade-in-up">
+                <div class="hero-label">
+                    <span>•</span> Modern Business Platform
+                </div>
+                <h1 class="hero-title">Smart solutions for <span class="text-gradient">growing businesses</span></h1>
+                <p class="hero-subtitle">
+                    Relvanta provides ready-to-use software tools and expert services to help medium-sized companies streamline operations, boost productivity, and stay competitive.
+                </p>
+                <div class="btn-group">
+                    <a href="#business" class="btn btn-primary">Learn More</a>
+                    <a href="#solutions" class="btn btn-secondary">View Solutions</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BUSINESS MODEL SECTION -->
+    <section id="business">
+        <div class="container">
+            <div class="section-header fade-in-up">
+                <h2 class="section-title">How We Help Your Business</h2>
+                <p class="section-intro">Two ways to get the tools and expertise you need to succeed</p>
+            </div>
+
+            <div class="card-grid">
+                <div class="card fade-in-up" style="--accent-color: var(--teal);">
+                    <div class="card-icon">🛠️</div>
+                    <h3 class="card-title">Software Tools</h3>
+                    <div class="card-label">Ready to Use</div>
+                    <p class="card-description">
+                        Access our suite of business software including security monitoring, analytics dashboards, automation tools, and workflow optimization. Simple monthly subscription with no long-term commitment.
+                    </p>
+                </div>
+
+                <div class="card fade-in-up stagger-1" style="--accent-color: var(--cyan);">
+                    <div class="card-icon">🤝</div>
+                    <h3 class="card-title">Expert Services</h3>
+                    <div class="card-label">Hands-On Support</div>
+                    <p class="card-description">
+                        Get personalized guidance for your specific needs. Our consultants help with strategy planning, system integration, staff training, and ongoing optimization to ensure you get maximum value.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TARGET MARKET SECTION -->
+    <section>
+        <div class="container">
+            <div class="section-header fade-in-up">
+                <h2 class="section-title">Built for Growing Companies</h2>
+                <p class="section-intro">We focus on medium-sized businesses that need professional tools but don't have large IT departments</p>
+            </div>
+
+            <div class="stats-grid fade-in-up">
+                <div class="stat-item">
+                    <div class="stat-value">50-500</div>
+                    <div class="stat-label">Employees</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">Fast</div>
+                    <div class="stat-label">Setup</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">Easy</div>
+                    <div class="stat-label">To Use</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">Clear</div>
+                    <div class="stat-label">ROI</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOLUTIONS SECTION -->
+    <section id="solutions">
+        <div class="container">
+            <div class="section-header fade-in-up">
+                <div class="hero-label">What We Offer</div>
+                <h2 class="section-title">Solutions That Make Sense</h2>
+                <p class="section-intro">Practical tools designed to solve common business challenges</p>
+            </div>
+
+            <div class="card-grid cols-3">
+                <div class="card fade-in-up" style="--accent-color: #7C3AED;">
+                    <div class="card-icon">🛡️</div>
+                    <h3 class="card-title">Security Monitoring</h3>
+                    <div class="card-label">Protection</div>
+                    <p class="card-description">24/7 monitoring to keep your business safe from cyber threats and data breaches.</p>
+                </div>
+
+                <div class="card fade-in-up stagger-1" style="--accent-color: var(--cyan);">
+                    <div class="card-icon">📊</div>
+                    <h3 class="card-title">Business Analytics</h3>
+                    <div class="card-label">Insights</div>
+                    <p class="card-description">Understand your sales trends, customer behavior, and inventory needs with clear reports.</p>
+                </div>
+
+                <div class="card fade-in-up stagger-2" style="--accent-color: #FF6B6B;">
+                    <div class="card-icon">✨</div>
+                    <h3 class="card-title">User Experience</h3>
+                    <div class="card-label">Optimization</div>
+                    <p class="card-description">Improve your website and apps to make them easier for customers to use.</p>
+                </div>
+
+                <div class="card fade-in-up" style="--accent-color: var(--teal);">
+                    <div class="card-icon">🚀</div>
+                    <h3 class="card-title">Performance Tools</h3>
+                    <div class="card-label">Speed & SEO</div>
+                    <p class="card-description">Make your website faster and easier to find on search engines.</p>
+                </div>
+
+                <div class="card fade-in-up stagger-1" style="--accent-color: #6366F1;">
+                    <div class="card-icon">🧠</div>
+                    <h3 class="card-title">Project Planning</h3>
+                    <div class="card-label">Organization</div>
+                    <p class="card-description">Turn complex projects into clear, manageable tasks and timelines.</p>
+                </div>
+
+                <div class="card fade-in-up stagger-2" style="--accent-color: #F59E0B;">
+                    <div class="card-icon">⚡</div>
+                    <h3 class="card-title">Workflow Automation</h3>
+                    <div class="card-label">Efficiency</div>
+                    <p class="card-description">Automate repetitive tasks so your team can focus on important work.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROADMAP SECTION -->
+    <section id="roadmap">
+        <div class="container">
+            <div class="section-header fade-in-up">
+                <h2 class="section-title">Our Launch Plan</h2>
+            </div>
+            
+            <div class="timeline fade-in-up">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-phase">Weeks 1-2</div>
+                    <h3 class="card-title">Getting Started</h3>
+                    <p class="card-description">Setting up the company, building our platform, and preparing our first solutions.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-phase">Weeks 3-8</div>
+                    <h3 class="card-title">Testing Phase</h3>
+                    <p class="card-description">Working with a small group of businesses to test our tools and services, gathering feedback to improve.</p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-phase">Month 4+</div>
+                    <h3 class="card-title">Full Launch</h3>
+                    <p class="card-description">Opening to all businesses and expanding our solution offerings based on market needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact">
+        <div class="container">
+            <div class="cta-box fade-in-up">
+                <h2 class="section-title">Let's Talk About Your Business</h2>
+                <p class="section-intro" style="margin: 0 auto 2rem auto;">
+                    Ready to streamline your operations and grow more efficiently? Get in touch to learn how Relvanta can help.
+                </p>
+                
+                <ul class="feature-list">
+                    <li>No long-term contracts - monthly subscriptions you can cancel anytime</li>
+                    <li>Expert support included with all plans</li>
+                    <li>Quick implementation - most tools ready to use within days</li>
+                </ul>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem; justify-content: center; margin-top: 3rem; align-items: center;">
+                    <a href="mailto:hello@relvanta.com" class="btn btn-primary">Contact Us</a>
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">📍 Stockholm, Sweden</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Simple smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Fade in animations on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.fade-in-up').forEach((el) => observer.observe(el));
+    </script>
+</body>
+</html>
