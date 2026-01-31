@@ -49,8 +49,6 @@ A comprehensive AI solutions platform showcasing products, services, and experim
 │   ├── lib/                  # Utilities & API client
 │   └── package.json          # Node dependencies
 │
-├── frontend/                  # Legacy React CRA (kept for reference)
-│
 └── auth_testing.md           # Auth testing playbook
 ```
 
