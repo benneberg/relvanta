@@ -4,11 +4,11 @@ A comprehensive AI solutions platform showcasing products, services, and experim
 
 ## Architecture Overview
 
-**Hybrid Full-Stack Application:**
+**Emergent-Independent Full-Stack Application:**
 - **Frontend**: Next.js 14+ with App Router (TypeScript + Tailwind CSS)
 - **Backend**: FastAPI with MongoDB
-- **Authentication**: Emergent Google OAuth
-- **Database**: MongoDB (local instance)
+- **Authentication**: Firebase Authentication (Google OAuth)
+- **Database**: MongoDB (local or MongoDB Atlas)
 
 ```
 ┌─────────────────┐      ┌──────────────────┐      ┌──────────────┐
@@ -22,8 +22,8 @@ A comprehensive AI solutions platform showcasing products, services, and experim
          │                        │
          │                        │
          └────────────────────────┘
-              Emergent OAuth
-         (Google Authentication)
+          Firebase Authentication
+         (Google OAuth Provider)
 ```
 
 ## Project Structure
