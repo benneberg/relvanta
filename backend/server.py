@@ -107,29 +107,40 @@ async def require_auth(
 @api_router.post("/auth/session")
 async def create_session(
     response: Response,
-    x_session_id: str = Header(..., alias="X-Session-ID")
+    request: Request
 ):
     """
-    Exchange Emergent session_id for user data and create session.
-    Called by frontend after OAuth redirect.
+    Create session from Firebase ID token.
+    Called by frontend after Firebase authentication.
+    
+    Expects Authorization header: Bearer <firebase_id_token>
     """
-    try:
-        # Call Emergent API to get user data
-        async with httpx.AsyncClient() as client:
-            emergent_response = await client.get(
-                "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data",
-                headers={"X-Session-ID": x_session_id},
-                timeout=10.0
-            )
-            emergent_response.raise_for_status()
-            user_data = emergent_response.json()
-    except Exception as e:
-        logging.error(f"Failed to fetch session data from Emergent: {e}")
-        raise HTTPException(status_code=400, detail="Invalid session ID")
+    # Get Firebase ID token from Authorization header
+    auth_header = request.headers.get("Authorization")
+    
+    if not auth_header or not auth_header.startswith("Bearer "):
+        raise HTTPException(status_code=400, detail="Missing or invalid Authorization header")
+    
+    firebase_token = auth_header.replace("Bearer ", "")
+    
+    # Verify Firebase token
+    decoded_token = verify_firebase_token(firebase_token)
+    
+    if not decoded_token:
+        raise HTTPException(status_code=401, detail="Invalid or expired Firebase token")
+    
+    # Extract user info from Firebase token
+    firebase_uid = decoded_token.get("uid")
+    email = decoded_token.get("email")
+    name = decoded_token.get("name") or email.split("@")[0]
+    picture = decoded_token.get("picture")
+    
+    if not firebase_uid or not email:
+        raise HTTPException(status_code=400, detail="Invalid token claims")
     
     # Check if user exists
     existing_user = await db.users.find_one(
-        {"email": user_data["email"]},
+        {"email": email},
         {"_id": 0}
     )
     
@@ -139,8 +150,9 @@ async def create_session(
         await db.users.update_one(
             {"user_id": user_id},
             {"$set": {
-                "name": user_data["name"],
-                "picture": user_data.get("picture"),
+                "name": name,
+                "picture": picture,
+                "firebase_uid": firebase_uid,  # Store Firebase UID
                 "updated_at": datetime.now(timezone.utc)
             }}
         )
@@ -149,21 +161,24 @@ async def create_session(
         user_id = f"user_{uuid.uuid4().hex[:12]}"
         await db.users.insert_one({
             "user_id": user_id,
-            "email": user_data["email"],
-            "name": user_data["name"],
-            "picture": user_data.get("picture"),
+            "firebase_uid": firebase_uid,  # Store Firebase UID
+            "email": email,
+            "name": name,
+            "picture": picture,
             "role": Role.CLIENT.value,  # Default role
             "organization_slug": None,
-            "created_at": datetime.now(timezone.utc)
+            "created_at": datetime.now(timezone.utc),
+            "updated_at": datetime.now(timezone.utc)
         })
     
     # Create session with timezone-aware expiry (7 days)
-    session_token = user_data["session_token"]
+    session_token = f"sess_{uuid.uuid4().hex}"
     expires_at = datetime.now(timezone.utc) + timedelta(days=7)
     
     await db.user_sessions.insert_one({
         "user_id": user_id,
         "session_token": session_token,
+        "firebase_uid": firebase_uid,  # Link to Firebase user
         "expires_at": expires_at,
         "created_at": datetime.now(timezone.utc)
     })
