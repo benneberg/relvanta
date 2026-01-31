@@ -1,14 +1,22 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException, Header, Cookie, Response, Request
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import httpx
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List
+from typing import List, Optional
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+
+# Import models
+from models import (
+    Product, Service, Lab, Page, Redirect, ClientAccess,
+    User, UserSession, Role, Visibility, Status, LabStatus,
+    ProductListResponse, ServiceListResponse, LabListResponse
+)
 
 
 ROOT_DIR = Path(__file__).parent
@@ -20,55 +28,432 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 # Create the main app without a prefix
-app = FastAPI()
+app = FastAPI(title="Relvanta Platform API")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
 
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
+# ============================================================================
+# AUTHENTICATION UTILITIES
+# ============================================================================
+
+async def get_current_user(
+    authorization: Optional[str] = Header(None),
+    session_token: Optional[str] = Cookie(None)
+) -> Optional[User]:
+    """
+    Authenticator helper - checks session_token from cookies first, 
+    then Authorization header as fallback.
+    """
+    token = session_token or (authorization.replace("Bearer ", "") if authorization else None)
     
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    if not token:
+        return None
+    
+    # Find session in database
+    session_doc = await db.user_sessions.find_one(
+        {"session_token": token},
+        {"_id": 0}  # Exclude MongoDB's _id
+    )
+    
+    if not session_doc:
+        return None
+    
+    # Check expiry (handle timezone-aware comparison)
+    expires_at = session_doc["expires_at"]
+    if isinstance(expires_at, str):
+        expires_at = datetime.fromisoformat(expires_at)
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    
+    if expires_at < datetime.now(timezone.utc):
+        # Session expired
+        await db.user_sessions.delete_one({"session_token": token})
+        return None
+    
+    # Get user
+    user_doc = await db.users.find_one(
+        {"user_id": session_doc["user_id"]},
+        {"_id": 0}  # Exclude MongoDB's _id
+    )
+    
+    if not user_doc:
+        return None
+    
+    return User(**user_doc)
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
 
-# Add your routes to the router instead of directly to app
+async def require_auth(
+    authorization: Optional[str] = Header(None),
+    session_token: Optional[str] = Cookie(None)
+) -> User:
+    """Require authentication, raise 401 if not authenticated."""
+    user = await get_current_user(authorization, session_token)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return user
+
+
+# ============================================================================
+# AUTHENTICATION ENDPOINTS
+# ============================================================================
+
+@api_router.post("/auth/session")
+async def create_session(
+    response: Response,
+    x_session_id: str = Header(..., alias="X-Session-ID")
+):
+    """
+    Exchange Emergent session_id for user data and create session.
+    Called by frontend after OAuth redirect.
+    """
+    try:
+        # Call Emergent API to get user data
+        async with httpx.AsyncClient() as client:
+            emergent_response = await client.get(
+                "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data",
+                headers={"X-Session-ID": x_session_id},
+                timeout=10.0
+            )
+            emergent_response.raise_for_status()
+            user_data = emergent_response.json()
+    except Exception as e:
+        logging.error(f"Failed to fetch session data from Emergent: {e}")
+        raise HTTPException(status_code=400, detail="Invalid session ID")
+    
+    # Check if user exists
+    existing_user = await db.users.find_one(
+        {"email": user_data["email"]},
+        {"_id": 0}
+    )
+    
+    if existing_user:
+        # Update existing user
+        user_id = existing_user["user_id"]
+        await db.users.update_one(
+            {"user_id": user_id},
+            {"$set": {
+                "name": user_data["name"],
+                "picture": user_data.get("picture"),
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+    else:
+        # Create new user with custom user_id (not MongoDB _id)
+        user_id = f"user_{uuid.uuid4().hex[:12]}"
+        await db.users.insert_one({
+            "user_id": user_id,
+            "email": user_data["email"],
+            "name": user_data["name"],
+            "picture": user_data.get("picture"),
+            "role": Role.CLIENT.value,  # Default role
+            "organization_slug": None,
+            "created_at": datetime.now(timezone.utc)
+        })
+    
+    # Create session with timezone-aware expiry (7 days)
+    session_token = user_data["session_token"]
+    expires_at = datetime.now(timezone.utc) + timedelta(days=7)
+    
+    await db.user_sessions.insert_one({
+        "user_id": user_id,
+        "session_token": session_token,
+        "expires_at": expires_at,
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    # Set httpOnly cookie
+    response.set_cookie(
+        key="session_token",
+        value=session_token,
+        httponly=True,
+        secure=True,  # HTTPS only in production
+        samesite="none",  # Required for cross-origin
+        path="/",
+        max_age=7 * 24 * 60 * 60  # 7 days in seconds
+    )
+    
+    # Return user data
+    user_doc = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+    return User(**user_doc)
+
+
+@api_router.get("/auth/me")
+async def get_current_user_endpoint(
+    authorization: Optional[str] = Header(None),
+    session_token: Optional[str] = Cookie(None)
+):
+    """
+    Get current authenticated user.
+    Used by frontend to check auth state.
+    """
+    user = await get_current_user(authorization, session_token)
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    return user
+
+
+@api_router.post("/auth/logout")
+async def logout(
+    response: Response,
+    authorization: Optional[str] = Header(None),
+    session_token: Optional[str] = Cookie(None)
+):
+    """Logout user and clear session."""
+    token = session_token or (authorization.replace("Bearer ", "") if authorization else None)
+    
+    if token:
+        # Delete session from database
+        await db.user_sessions.delete_one({"session_token": token})
+    
+    # Clear cookie
+    response.delete_cookie(
+        key="session_token",
+        path="/",
+        secure=True,
+        samesite="none"
+    )
+    
+    return {"message": "Logged out successfully"}
+
+
+# ============================================================================
+# CONTENT ENDPOINTS - PRODUCTS
+# ============================================================================
+
+@api_router.get("/content/products", response_model=ProductListResponse)
+async def list_products(
+    visibility: Optional[str] = None,
+    status: Optional[str] = None,
+    category: Optional[str] = None,
+    limit: int = 100
+):
+    """
+    List products with optional filters.
+    Public endpoint - returns only public products unless authenticated.
+    """
+    query = {}
+    
+    if visibility:
+        query["visibility"] = visibility
+    else:
+        # Default to public only
+        query["visibility"] = Visibility.PUBLIC.value
+    
+    if status:
+        query["status"] = status
+    
+    if category:
+        query["category"] = category
+    
+    # Query database
+    products_cursor = db.products.find(query, {"_id": 0}).limit(limit)
+    products_list = await products_cursor.to_list(length=limit)
+    
+    # Sort by order, then status, then name
+    def sort_key(p):
+        status_order = {"live": 0, "beta": 1, "pilot": 2, "idea": 3, "deprecated": 4, "archived": 5}
+        return (
+            p.get("order", 999),
+            status_order.get(p.get("status", "idea"), 999),
+            p.get("name", "")
+        )
+    
+    products_list.sort(key=sort_key)
+    
+    return ProductListResponse(
+        products=[Product(**p) for p in products_list],
+        total=len(products_list)
+    )
+
+
+@api_router.get("/content/products/{slug}", response_model=Product)
+async def get_product(slug: str):
+    """Get a single product by slug."""
+    product_doc = await db.products.find_one(
+        {"slug": slug},
+        {"_id": 0}
+    )
+    
+    if not product_doc:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    return Product(**product_doc)
+
+
+# ============================================================================
+# CONTENT ENDPOINTS - SERVICES
+# ============================================================================
+
+@api_router.get("/content/services", response_model=ServiceListResponse)
+async def list_services(
+    visibility: Optional[str] = None,
+    engagement_type: Optional[str] = None,
+    limit: int = 100
+):
+    """List services with optional filters."""
+    query = {}
+    
+    if visibility:
+        query["visibility"] = visibility
+    else:
+        query["visibility"] = Visibility.PUBLIC.value
+    
+    if engagement_type:
+        query["engagement_type"] = engagement_type
+    
+    services_cursor = db.services.find(query, {"_id": 0}).limit(limit)
+    services_list = await services_cursor.to_list(length=limit)
+    
+    return ServiceListResponse(
+        services=[Service(**s) for s in services_list],
+        total=len(services_list)
+    )
+
+
+@api_router.get("/content/services/{slug}", response_model=Service)
+async def get_service(slug: str):
+    """Get a single service by slug."""
+    service_doc = await db.services.find_one(
+        {"slug": slug},
+        {"_id": 0}
+    )
+    
+    if not service_doc:
+        raise HTTPException(status_code=404, detail="Service not found")
+    
+    return Service(**service_doc)
+
+
+# ============================================================================
+# CONTENT ENDPOINTS - LABS (Protected)
+# ============================================================================
+
+@api_router.get("/content/labs", response_model=LabListResponse)
+async def list_labs(
+    status: Optional[str] = None,
+    limit: int = 100,
+    authorization: Optional[str] = Header(None),
+    session_token: Optional[str] = Cookie(None)
+):
+    """
+    List labs (requires authentication).
+    Labs are experimental content requiring explicit access.
+    """
+    user = await require_auth(authorization, session_token)
+    
+    query = {"visibility": Visibility.LABS.value}
+    
+    if status:
+        query["status"] = status
+    
+    labs_cursor = db.labs.find(query, {"_id": 0}).limit(limit)
+    labs_list = await labs_cursor.to_list(length=limit)
+    
+    return LabListResponse(
+        labs=[Lab(**l) for l in labs_list],
+        total=len(labs_list)
+    )
+
+
+@api_router.get("/content/labs/{slug}", response_model=Lab)
+async def get_lab(
+    slug: str,
+    authorization: Optional[str] = Header(None),
+    session_token: Optional[str] = Cookie(None)
+):
+    """Get a single lab by slug (requires authentication)."""
+    user = await require_auth(authorization, session_token)
+    
+    lab_doc = await db.labs.find_one(
+        {"slug": slug},
+        {"_id": 0}
+    )
+    
+    if not lab_doc:
+        raise HTTPException(status_code=404, detail="Lab not found")
+    
+    return Lab(**lab_doc)
+
+
+# ============================================================================
+# CONTENT ENDPOINTS - PAGES
+# ============================================================================
+
+@api_router.get("/content/pages/{slug}", response_model=Page)
+async def get_page(slug: str):
+    """Get a single page by slug."""
+    page_doc = await db.pages.find_one(
+        {"slug": slug},
+        {"_id": 0}
+    )
+    
+    if not page_doc:
+        raise HTTPException(status_code=404, detail="Page not found")
+    
+    return Page(**page_doc)
+
+
+# ============================================================================
+# REDIRECTS
+# ============================================================================
+
+@api_router.get("/content/redirects")
+async def list_redirects():
+    """Get all redirects for client-side or middleware use."""
+    redirects_cursor = db.redirects.find({}, {"_id": 0})
+    redirects_list = await redirects_cursor.to_list(length=1000)
+    return {"redirects": redirects_list}
+
+
+# ============================================================================
+# CLIENT ACCESS (For future use)
+# ============================================================================
+
+@api_router.get("/access/{user_id}")
+async def get_client_access(
+    user_id: str,
+    authorization: Optional[str] = Header(None),
+    session_token: Optional[str] = Cookie(None)
+):
+    """Get client access permissions."""
+    user = await require_auth(authorization, session_token)
+    
+    # Users can only access their own permissions (unless admin)
+    if user.user_id != user_id and user.role != Role.ADMIN:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    access_doc = await db.client_access.find_one(
+        {"user_id": user_id},
+        {"_id": 0}
+    )
+    
+    if not access_doc:
+        # Return default empty access
+        return ClientAccess(
+            user_id=user_id,
+            scope={"products": [], "services": [], "labs": []},
+            permissions=["read"],
+            granted_at=datetime.now(timezone.utc)
+        )
+    
+    return ClientAccess(**access_doc)
+
+
+# ============================================================================
+# LEGACY ENDPOINT (Keep for compatibility)
+# ============================================================================
+
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Relvanta Platform API"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
-
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
 
 # Include the router in the main app
 app.include_router(api_router)
 
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
@@ -84,6 +469,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+
+# Health check
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "relvanta-api"}
