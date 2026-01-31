@@ -407,24 +407,26 @@ NEXT_PUBLIC_ENVIRONMENT=development
 
 ## Technology Stack
 
-### Frontend
-- **Framework**: Next.js 16.1.6
-- **Language**: TypeScript 5.9
-- **Styling**: Tailwind CSS 4.1
-- **Validation**: Zod 4.3
-- **Markdown**: React-Markdown
+**Technology Stack:**
+- Next.js 16.1.6
+- React 19.2.4
+- TypeScript 5.9.3
+- Tailwind CSS 4.1.18
+- Zod 4.3.6 (validation)
+- React-Markdown 10.1.0
+- Firebase 12.8.0 (authentication)
 
-### Backend
-- **Framework**: FastAPI 0.110.1
-- **Language**: Python 3.11
-- **Database**: MongoDB with Motor (async)
-- **Validation**: Pydantic 2.6+
-- **HTTP Client**: httpx (for Emergent OAuth)
+**Backend**
+- FastAPI 0.110.1
+- Python 3.11
+- Motor 3.3.1 (MongoDB async driver)
+- Pydantic 2.6+ (validation)
+- Firebase Admin 7.1.0 (token verification)
 
-### Infrastructure
-- **Process Manager**: Supervisor
-- **Database**: MongoDB 4.5
-- **Authentication**: Emergent OAuth
+**Infrastructure**
+- Supervisor (process management)
+- MongoDB 4.5
+- Firebase Authentication
 
 ## Key Design Decisions
 
