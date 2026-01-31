@@ -160,6 +160,10 @@ All services are managed by **Supervisor** and running:
 ✅ mongodb          RUNNING   (Port 27017)
 ```
 
+**Managed by Supervisor** - Auto-restart on failure
+
+**Note:** Old React CRA frontend has been removed. Only Next.js frontend remains.
+
 ### Service Management
 
 ```bash
