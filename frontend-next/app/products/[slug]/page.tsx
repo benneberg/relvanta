@@ -42,6 +42,19 @@ export default async function ProductDetailPage({
     notFound();
   }
 
+  // Fetch related products if IDs exist
+  let relatedProducts = [];
+  if (product.related_products && product.related_products.length > 0) {
+    try {
+      const { products: allProducts } = await getProducts({ visibility: 'public' });
+      relatedProducts = allProducts.filter(p => 
+        product.related_products?.includes(p.id) && p.slug !== slug
+      );
+    } catch (error) {
+      console.error('Error fetching related products:', error);
+    }
+  }
+
   return (
     <div className="py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
