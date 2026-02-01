@@ -51,9 +51,9 @@ export const ProductThemeSchema = z.object({
 });
 
 export const ProductLinksSchema = z.object({
-  demo: z.string().optional(),
-  docs: z.string().optional(),
-  external: z.string().optional(),
+  demo: z.string().optional().nullable(),
+  docs: z.string().optional().nullable(),
+  external: z.string().optional().nullable(),
 });
 
 export const ProductSchema = ContentBaseSchema.extend({
