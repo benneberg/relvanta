@@ -226,10 +226,12 @@ This document tracks implementation progress against the Open Technical Specific
 
 ### Navigation
 
-- [x] Static navigation in Header
-- [ ] **Dynamic navigation** - Should be generated from content registries
-- [ ] **Ordering logic** - order field exists but not used in nav generation
-- [ ] **Filtering by visibility** - Partially done (public only in nav)
+- [x] **Dynamic navigation system implemented** ✅
+- [x] **Navigation utility (`lib/navigation.ts`)** ✅
+- [x] **Header/Footer use dynamic navigation** ✅
+- [ ] **Database-driven navigation** - Structure ready, needs admin UI
+- [x] **Ordering logic** - Order field respected
+- [x] **Filtering by visibility** - Public content in navigation
 
 ---
 
