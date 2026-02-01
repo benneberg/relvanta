@@ -80,9 +80,9 @@ export const ServiceSchema = ContentBaseSchema.extend({
   description: z.string(),
   scope: z.array(z.string()),
   engagement_type: EngagementTypeSchema,
-  deliverables: z.array(z.string()).optional(),
-  duration: z.string().optional(),
-  related_services: z.array(z.string()).optional(),
+  deliverables: z.array(z.string()).optional().nullable(),
+  duration: z.string().optional().nullable(),
+  related_services: z.array(z.string()).optional().nullable(),
 });
 export type Service = z.infer<typeof ServiceSchema>;
 
