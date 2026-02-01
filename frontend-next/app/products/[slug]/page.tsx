@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getProduct, getProducts } from '@/lib/api';
+import { Product } from '@/lib/schemas';
 import MDXRenderer from '@/components/content/MDXRenderer';
 import Link from 'next/link';
 
