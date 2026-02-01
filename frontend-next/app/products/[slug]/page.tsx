@@ -43,7 +43,7 @@ export default async function ProductDetailPage({
   }
 
   // Fetch related products if IDs exist
-  let relatedProducts = [];
+  let relatedProducts: Product[] = [];
   if (product.related_products && product.related_products.length > 0) {
     try {
       const { products: allProducts } = await getProducts({ visibility: 'public' });
