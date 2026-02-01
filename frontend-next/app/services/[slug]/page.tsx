@@ -41,6 +41,19 @@ export default async function ServiceDetailPage({
     notFound();
   }
 
+  // Fetch related services if IDs exist
+  let relatedServices = [];
+  if (service.related_services && service.related_services.length > 0) {
+    try {
+      const { services: allServices } = await getServices({ visibility: 'public' });
+      relatedServices = allServices.filter(s => 
+        service.related_services?.includes(s.id) && s.slug !== slug
+      );
+    } catch (error) {
+      console.error('Error fetching related services:', error);
+    }
+  }
+
   return (
     <div className="py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
