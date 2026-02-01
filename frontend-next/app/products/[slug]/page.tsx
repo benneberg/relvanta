@@ -154,6 +154,40 @@ export default async function ProductDetailPage({
           )}
         </div>
 
+        {/* Related Products */}
+        {relatedProducts.length > 0 && (
+          <div className="mt-16 pt-12 border-t border-gray-200 dark:border-gray-800">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              Related Products
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {relatedProducts.map((relatedProduct) => (
+                <Link
+                  key={relatedProduct.id}
+                  href={`/products/${relatedProduct.slug}`}
+                  className="group block p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-all"
+                >
+                  <div
+                    className="w-12 h-12 rounded-lg mb-4 flex items-center justify-center text-white font-bold text-xl"
+                    style={{ backgroundColor: relatedProduct.accent_color }}
+                  >
+                    {relatedProduct.name.charAt(0)}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    {relatedProduct.name}
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                    {relatedProduct.category}
+                  </p>
+                  <p className="text-gray-700 dark:text-gray-300 line-clamp-2">
+                    {relatedProduct.short_description}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* CTA */}
         <div className="mt-12 p-8 bg-blue-50 dark:bg-gray-800 rounded-xl text-center">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
