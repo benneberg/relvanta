@@ -119,6 +119,39 @@ export default async function ServiceDetailPage({
           </div>
         )}
 
+        {/* Related Services */}
+        {relatedServices.length > 0 && (
+          <div className="mb-12 pb-12 border-b border-gray-200 dark:border-gray-800">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              Related Services
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {relatedServices.map((relatedService) => (
+                <Link
+                  key={relatedService.id}
+                  href={`/services/${relatedService.slug}`}
+                  className="group block p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-all"
+                >
+                  <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold rounded-full mb-3 uppercase">
+                    {relatedService.engagement_type}
+                  </span>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    {relatedService.name}
+                  </h3>
+                  <p className="text-gray-700 dark:text-gray-300 line-clamp-2">
+                    {relatedService.summary}
+                  </p>
+                  {relatedService.duration && (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                      Duration: {relatedService.duration}
+                    </p>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* CTA */}
         <div className="mt-12 p-8 bg-blue-50 dark:bg-gray-800 rounded-xl text-center">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
