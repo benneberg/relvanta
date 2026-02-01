@@ -43,7 +43,7 @@ export default async function ServiceDetailPage({
   }
 
   // Fetch related services if IDs exist
-  let relatedServices = [];
+  let relatedServices: Service[] = [];
   if (service.related_services && service.related_services.length > 0) {
     try {
       const { services: allServices } = await getServices({ visibility: 'public' });
