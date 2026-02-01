@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getService, getServices } from '@/lib/api';
+import { Service } from '@/lib/schemas';
 import MDXRenderer from '@/components/content/MDXRenderer';
 import Link from 'next/link';
 
