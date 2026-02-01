@@ -2,16 +2,13 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { getMainNavigation } from '@/lib/navigation';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const navigation = [
-    { name: 'Products', href: '/products' },
-    { name: 'Services', href: '/services' },
-    { name: 'Labs', href: '/labs' },
-    { name: 'About', href: '/about' },
-  ];
+  
+  // Get navigation items dynamically
+  const navigation = getMainNavigation();
 
   return (
     <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
@@ -48,6 +45,7 @@ export default function Header() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+              aria-label="Toggle mobile menu"
             >
               <svg
                 className="h-6 w-6"
