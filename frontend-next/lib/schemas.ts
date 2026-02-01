@@ -64,12 +64,12 @@ export const ProductSchema = ContentBaseSchema.extend({
   category: z.string(),
   status: StatusSchema,
   accent_color: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
-  icon: z.string().optional(),
-  features: z.array(z.string()).optional(),
-  target_audience: z.string().optional(),
-  related_products: z.array(z.string()).optional(),
-  links: ProductLinksSchema.optional(),
-  theme: ProductThemeSchema.optional(),
+  icon: z.string().optional().nullable(),
+  features: z.array(z.string()).optional().nullable(),
+  target_audience: z.string().optional().nullable(),
+  related_products: z.array(z.string()).optional().nullable(),
+  links: ProductLinksSchema.optional().nullable(),
+  theme: ProductThemeSchema.optional().nullable(),
 });
 export type Product = z.infer<typeof ProductSchema>;
 
