@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import { getFooterNavigation } from '@/lib/navigation';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const footerSections = getFooterNavigation();
 
   return (
     <footer className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
@@ -17,104 +19,26 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Products */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
-              Products
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/products/oneeye"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  OneEye
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products/predictiq"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  PredictIQ
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products/chatflow"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  ChatFlow
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
-              Services
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/services/ai-strategy-consulting"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  Strategy Consulting
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/mlops-implementation"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  MLOps Implementation
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/ai-pilot-program"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  AI Pilot Program
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
-              Company
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/about"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/labs"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  Labs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/login"
-                  className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
-                >
-                  Sign In
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* Dynamic Navigation Sections */}
+          {footerSections.map((section) => (
+            <div key={section.title}>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
+                {section.title}
+              </h3>
+              <ul className="space-y-2">
+                {section.links.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800">
