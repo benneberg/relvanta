@@ -46,8 +46,8 @@ export type ContentBase = z.infer<typeof ContentBaseSchema>;
 
 // Product schema
 export const ProductThemeSchema = z.object({
-  primary_color: z.string().optional(),
-  secondary_color: z.string().optional(),
+  primary_color: z.string().optional().nullable(),
+  secondary_color: z.string().optional().nullable(),
 });
 
 export const ProductLinksSchema = z.object({
