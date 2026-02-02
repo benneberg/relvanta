@@ -4,7 +4,8 @@ import { Service } from '@/lib/schemas';
 import MDXRenderer from '@/components/content/MDXRenderer';
 import Link from 'next/link';
 
-export const revalidate = 60; // ISR
+export const revalidate = 60; // ISR: Revalidate every 60 seconds
+export const dynamicParams = true; // Generate pages on-demand if not pre-rendered
 
 export async function generateStaticParams() {
   // During build, the API might not be accessible
