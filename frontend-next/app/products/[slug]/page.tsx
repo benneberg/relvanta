@@ -8,10 +8,18 @@ export const revalidate = 60; // ISR
 
 // Generate static paths for products
 export async function generateStaticParams() {
-  const { products } = await getProducts({ visibility: 'public' });
-  return products.map((product) => ({
-    slug: product.slug,
-  }));
+  // During build, the API might not be accessible
+  // Return empty array to skip static generation at build time
+  // Pages will be generated on-demand with ISR
+  try {
+    const { products } = await getProducts({ visibility: 'public' });
+    return products.map((product) => ({
+      slug: product.slug,
+    }));
+  } catch (error) {
+    console.warn('Could not fetch products during build, will generate on-demand:', error);
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
