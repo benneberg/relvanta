@@ -1,0 +1,69 @@
+# =========================
+# Next.js / Vercel
+# =========================
+.next/
+out/
+.vercel/
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Dependencies
+# =========================
+node_modules/
+
+# =========================
+# Logs
+# =========================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Editor / IDE
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# TypeScript
+# =========================
+*.tsbuildinfo
+
+# =========================
+# Testing / Coverage
+# =========================
+coverage/
+
+# =========================
+# Temporary / Cache
+# =========================
+.cache/
+.tmp/
+.temp/
+
+# =========================
+# Build artifacts
+# =========================
+dist/
+build/
+
+# =========================
+# Optional: local proxy / dev-only files
+# =========================
+proxy.local.ts
