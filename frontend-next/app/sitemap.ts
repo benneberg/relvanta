@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getProducts, getServices } from '@/lib/api';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '').replace(':8001', '') || 'http://localhost:3001';
 
   // Static pages
   const staticPages = [
@@ -46,7 +46,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       })),
     ];
   } catch (error) {
-    console.error('Error fetching products for sitemap:', error);
+    console.warn('Could not fetch products for sitemap, using static pages only:', error);
+    // Add just the products listing page
+    productPages = [{
+      url: `${baseUrl}/products`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    }];
   }
 
   // Dynamic service pages
@@ -69,7 +76,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       })),
     ];
   } catch (error) {
-    console.error('Error fetching services for sitemap:', error);
+    console.warn('Could not fetch services for sitemap, using static pages only:', error);
+    // Add just the services listing page
+    servicePages = [{
+      url: `${baseUrl}/services`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    }];
   }
 
   return [...staticPages, ...productPages, ...servicePages];
