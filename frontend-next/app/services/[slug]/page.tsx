@@ -7,10 +7,18 @@ import Link from 'next/link';
 export const revalidate = 60; // ISR
 
 export async function generateStaticParams() {
-  const { services } = await getServices({ visibility: 'public' });
-  return services.map((service) => ({
-    slug: service.slug,
-  }));
+  // During build, the API might not be accessible
+  // Return empty array to skip static generation at build time
+  // Pages will be generated on-demand with ISR
+  try {
+    const { services } = await getServices({ visibility: 'public' });
+    return services.map((service) => ({
+      slug: service.slug,
+    }));
+  } catch (error) {
+    console.warn('Could not fetch services during build, will generate on-demand:', error);
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
