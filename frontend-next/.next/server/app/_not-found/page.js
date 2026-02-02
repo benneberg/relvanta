@@ -2,7 +2,7 @@ var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_not-found/
 R.c("server/chunks/ssr/[root-of-the-server]__3c22c7ed._.js")
 R.c("server/chunks/ssr/58c09_next_dist_df8ede60._.js")
 R.c("server/chunks/ssr/58c09_next_dist_esm_build_templates_app-page_942f55bd.js")
-R.c("server/chunks/ssr/[root-of-the-server]__296624be._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__4ef821a5._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__8b59f203._.js")
 R.c("server/chunks/ssr/58c09_next_dist_59f5b807._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__b8f8a0b9._.js")
