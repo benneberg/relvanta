@@ -33,10 +33,11 @@ async function fetchRedirects() {
   return redirectsCache;
 }
 
-export async function middleware(request: NextRequest) {
+// Named export for Next.js 16+ proxy
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Skip middleware for certain paths
+  // Skip proxy for certain paths
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||

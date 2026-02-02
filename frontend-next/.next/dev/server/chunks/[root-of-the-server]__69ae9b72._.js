@@ -47,8 +47,8 @@ module.exports = mod;
 __turbopack_context__.s([
     "config",
     ()=>config,
-    "middleware",
-    ()=>middleware
+    "proxy",
+    ()=>proxy
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2d$next$2f$node_modules$2f$next$2f$server$2e$js__$5b$middleware$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/frontend-next/node_modules/next/server.js [middleware] (ecmascript)");
 ;
@@ -79,9 +79,9 @@ async function fetchRedirects() {
     }
     return redirectsCache;
 }
-async function middleware(request) {
+async function proxy(request) {
     const pathname = request.nextUrl.pathname;
-    // Skip middleware for certain paths
+    // Skip proxy for certain paths
     if (pathname.startsWith('/_next') || pathname.startsWith('/api') || pathname.includes('.')) {
         return __TURBOPACK__imported__module__$5b$project$5d2f$frontend$2d$next$2f$node_modules$2f$next$2f$server$2e$js__$5b$middleware$5d$__$28$ecmascript$29$__["NextResponse"].next();
     }
