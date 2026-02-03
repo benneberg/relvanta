@@ -27,9 +27,9 @@ next-env.d.ts
 *.tsbuildinfo
 
 # Production builds
-/build
+/
+build/
 dist/
-dist
 
 # Environment files (comprehensive coverage)
 
@@ -79,5 +79,3 @@ agenthub/agents/youtube/db
 
 # Mobile development
 android-sdk/ frontend-next/node_modules/@next/swc-linux-arm64-gnu/next-swc.linux-arm64-gnu.node
-frontend-next/node_modules/@next/swc-linux-arm64-musl/next-swc.linux-arm64-musl.node
-frontend-next/node_modules/@next/swc-linux-arm64-gnu/next-swc.linux-arm64-gnu.node
