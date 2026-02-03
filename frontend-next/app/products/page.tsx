@@ -1,10 +1,19 @@
 import Link from 'next/link';
 import { getProducts } from '@/lib/api';
+import type { Product } from '@/lib/schemas';
 
 export const revalidate = 60; // ISR: Revalidate every 60 seconds
 
 export default async function ProductsPage() {
-  const { products } = await getProducts({ visibility: 'public' });
+  // Don’t fail the build if the backend isn’t reachable during `next build`.
+  // Vercel builds often run without access to your separate API.
+  let products: Product[] = [];
+  try {
+    const response = await getProducts({ visibility: 'public' });
+    products = response.products;
+  } catch (error) {
+    console.warn('ProductsPage: could not fetch products, rendering empty state:', error);
+  }
 
   // Filter to show only live and beta products
   const activeProducts = products.filter(

@@ -171,7 +171,7 @@ export default async function ServiceDetailPage({
             Contact our team to discuss your needs and how we can help.
           </p>
           <a
-            href="mailto:hello@relvanta.com?subject=Inquiry about ${service.name}"
+            href={`mailto:hello@relvanta.com?subject=Inquiry about ${service.name}`}
             className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
           >
             Contact Us

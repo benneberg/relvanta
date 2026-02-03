@@ -40,6 +40,28 @@ api_router = APIRouter(prefix="/api")
 
 
 # ============================================================================
+# COOKIE / CORS CONFIG (deployment-friendly)
+# ============================================================================
+
+# For Vercel (frontend) + Fly (API) on subdomains, set:
+#   COOKIE_DOMAIN=.relvanta.com
+# so the session cookie is available to both relvanta.com and api.relvanta.com.
+COOKIE_DOMAIN = os.environ.get("COOKIE_DOMAIN") or None
+
+# In local dev over http, you typically want COOKIE_SECURE=false.
+COOKIE_SECURE = os.environ.get("COOKIE_SECURE", "true").strip().lower() in (
+    "1",
+    "true",
+    "yes",
+)
+
+# If you need cookies across different *sites* (e.g. Vercel preview domains),
+# you may need SameSite=None + Secure=true. For relvanta.com <-> api.relvanta.com
+# SameSite=Lax is typically sufficient.
+COOKIE_SAMESITE = os.environ.get("COOKIE_SAMESITE", "lax").strip().lower()
+
+
+# ============================================================================
 # AUTHENTICATION UTILITIES
 # ============================================================================
 
@@ -188,8 +210,9 @@ async def create_session(
         key="session_token",
         value=session_token,
         httponly=True,
-        secure=True,  # HTTPS only in production
-        samesite="none",  # Required for cross-origin
+        secure=COOKIE_SECURE,
+        samesite=COOKIE_SAMESITE,
+        domain=COOKIE_DOMAIN,
         path="/",
         max_age=7 * 24 * 60 * 60  # 7 days in seconds
     )
@@ -231,8 +254,9 @@ async def logout(
     response.delete_cookie(
         key="session_token",
         path="/",
-        secure=True,
-        samesite="none"
+        secure=COOKIE_SECURE,
+        samesite=COOKIE_SAMESITE,
+        domain=COOKIE_DOMAIN,
     )
     
     return {"message": "Logged out successfully"}

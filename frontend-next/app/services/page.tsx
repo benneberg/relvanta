@@ -1,10 +1,18 @@
 import Link from 'next/link';
 import { getServices } from '@/lib/api';
+import type { Service } from '@/lib/schemas';
 
 export const revalidate = 60; // ISR
 
 export default async function ServicesPage() {
-  const { services } = await getServices({ visibility: 'public' });
+  // Don’t fail the build if the backend isn’t reachable during `next build`.
+  let services: Service[] = [];
+  try {
+    const response = await getServices({ visibility: 'public' });
+    services = response.services;
+  } catch (error) {
+    console.warn('ServicesPage: could not fetch services, rendering empty state:', error);
+  }
 
   return (
     <div className="py-16">

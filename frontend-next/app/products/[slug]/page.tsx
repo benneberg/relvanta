@@ -207,7 +207,7 @@ export default async function ProductDetailPage({
             Contact our team to learn how {product.name} can help your business.
           </p>
           <a
-            href="mailto:hello@relvanta.com?subject=Inquiry about ${product.name}"
+            href={`mailto:hello@relvanta.com?subject=Inquiry about ${product.name}`}
             className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
           >
             Get in Touch

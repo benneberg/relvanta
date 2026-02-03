@@ -1,5 +1,0 @@
-1:"$Sreact.fragment"
-2:I[66556,["/_next/static/chunks/9bd7d2ca052a1cb2.js","/_next/static/chunks/2472bf4f249b2cac.js"],"OutletBoundary"]
-3:"$Sreact.suspense"
-0:{"buildId":"fZMgkHg7W9CHfPafqrgjL","rsc":["$","$1","c",{"children":[["$","div",null,{"className":"min-h-[60vh] flex items-center justify-center px-4","children":["$","div",null,{"className":"text-center","children":[["$","h1",null,{"className":"text-6xl font-bold text-gray-900 dark:text-white mb-4","children":"404"}],["$","h2",null,{"className":"text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-4","children":"Page Not Found"}],["$","p",null,{"className":"text-gray-600 dark:text-gray-400 mb-8","children":"The page you're looking for doesn't exist or has been moved."}],["$","a",null,{"href":"/","className":"inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors","children":"Go Home"}]]}]}],null,["$","$L2",null,{"children":["$","$3",null,{"name":"Next.MetadataOutlet","children":"$@4"}]}]]}],"loading":null,"isPartial":false}
-4:null
