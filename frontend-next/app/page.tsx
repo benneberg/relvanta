@@ -28,7 +28,7 @@ export default async function HomePage() {
     <div className="flex flex-col gap-10 px-6 py-8 max-w-6xl mx-auto">
       {/* Hero Section */}
       <section className="flex flex-col gap-6" data-testid="hero-section">
-        <div className="relative flex flex-col items-center justify-center py-16 md:py-24 bg-charcoal-surface rounded-[2rem] border border-glass-border shadow-2xl overflow-hidden">
+        <div className="relative flex flex-col items-center justify-center py-16 md:py-24 bg-charcoal-surface rounded-[1rem] border-glass-border shadow-2xl overflow-hidden">
           {/* Background effects */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none"></div>
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pulse-glow"></div>
