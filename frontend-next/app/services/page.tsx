@@ -24,7 +24,7 @@ export default async function ServicesPage() {
           <h2 className="text-white/60 text-xs font-semibold tracking-[0.2em] uppercase">Services</h2>
         </div>
         
-        <div className="bg-charcoal-surface rounded-3xl p-8 border border-glass-border relative overflow-hidden">
+        <div className="relvanta-card rounded-3xl p-8 border border-glass-border relative overflow-hidden">
           <div className="absolute -top-20 -left-20 w-64 h-64 bg-green-500/10 rounded-full blur-[80px]"></div>
           <div className="relative z-10">
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">AI Services</h1>
@@ -49,7 +49,7 @@ export default async function ServicesPage() {
         </div>
 
         {services.length === 0 && (
-          <div className="bg-charcoal-surface rounded-2xl p-12 border border-glass-border text-center">
+          <div className="relvanta-card rounded-2xl p-12 border border-glass-border text-center">
             <span className="material-symbols-outlined text-4xl text-white/20 mb-4">handshake</span>
             <p className="text-gray-400 text-sm">No services available at the moment. Check back soon!</p>
           </div>
@@ -62,7 +62,7 @@ export default async function ServicesPage() {
           <h3 className="text-sm font-semibold text-white tracking-wide">Our Process</h3>
         </div>
 
-        <div className="bg-charcoal-surface rounded-3xl p-6 border border-glass-border">
+        <div className="relvanta-card rounded-3xl p-6 border border-glass-border">
           <div className="grid md:grid-cols-4 gap-6">
             <ProcessStep number="01" title="Discovery" description="Understanding your business needs and AI opportunities" />
             <ProcessStep number="02" title="Strategy" description="Developing a tailored AI implementation roadmap" />
@@ -73,7 +73,7 @@ export default async function ServicesPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-charcoal-surface rounded-3xl p-8 border border-glass-border text-center" data-testid="services-cta">
+      <section className="relvanta-card rounded-3xl p-8 border border-glass-border text-center" data-testid="services-cta">
         <h2 className="text-xl font-bold text-white mb-3">Ready to Get Started?</h2>
         <p className="text-gray-400 text-sm mb-6 max-w-md mx-auto">
           Let&apos;s discuss how we can help transform your business with AI.
@@ -99,7 +99,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
   return (
     <Link 
       href={`/services/${service.slug}`}
-      className="product-card-hover bg-charcoal-surface rounded-2xl p-6 border border-glass-border group"
+      className="product-card-hover relvanta-card rounded-2xl p-6 border border-glass-border group"
       data-testid={`service-card-${service.slug}`}
     >
       <div className={`size-12 bg-${color}/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-${color}/20 transition-colors`}>
