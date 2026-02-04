@@ -4,6 +4,7 @@ import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getFirebaseAuth } from '@/lib/firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import Link from 'next/link';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
 
@@ -28,21 +29,17 @@ function LoginForm() {
         return;
       }
 
-      // Sign in with Google using popup
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
-
-      // Get Firebase ID token
       const idToken = await result.user.getIdToken();
 
-      // Send token to backend to create session
       const response = await fetch(`${API_URL}/api/auth/session`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${idToken}`,
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Important: send/receive cookies
+        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -52,18 +49,19 @@ function LoginForm() {
       const userData = await response.json();
       console.log('User authenticated:', userData);
 
-      // Redirect to return URL or private dashboard
       const returnTo = searchParams.get('returnTo') || '/private';
       router.push(returnTo);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Authentication error:', err);
       
-      if (err.code === 'auth/popup-closed-by-user') {
+      const firebaseError = err as { code?: string; message?: string };
+      
+      if (firebaseError.code === 'auth/popup-closed-by-user') {
         setError('Sign-in popup was closed. Please try again.');
-      } else if (err.code === 'auth/popup-blocked') {
+      } else if (firebaseError.code === 'auth/popup-blocked') {
         setError('Popup was blocked by browser. Please allow popups for this site.');
       } else {
-        setError(err.message || 'Authentication failed. Please try again.');
+        setError(firebaseError.message || 'Authentication failed. Please try again.');
       }
       
       setIsLoading(false);
@@ -71,32 +69,51 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-[60vh] flex items-center justify-center px-4">
-      <div className="max-w-md w-full">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Sign In to Relvanta
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Access your personalized AI dashboard and experimental labs.
-            </p>
+    <div className="flex flex-col gap-8 px-6 py-8 max-w-md mx-auto min-h-[70vh] justify-center">
+      {/* Header */}
+      <div className="flex items-center gap-2">
+        <Link href="/" className="text-white/40 hover:text-white transition-colors">
+          <span className="material-symbols-outlined text-xl">arrow_back</span>
+        </Link>
+        <h2 className="text-white/60 text-xs font-semibold tracking-[0.2em] uppercase">Sign In</h2>
+      </div>
+
+      {/* Login Card */}
+      <div className="bg-charcoal-surface rounded-3xl p-8 border border-glass-border relative overflow-hidden">
+        <div className="absolute -top-20 -right-20 w-48 h-48 bg-primary/10 rounded-full blur-[60px]"></div>
+        
+        <div className="relative z-10">
+          {/* Logo */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="relative w-10 h-10">
+              <div className="absolute top-0 left-0 w-5 h-5 bg-white/20 rounded-[2px] z-20"></div>
+              <div className="absolute top-[4px] right-0 w-5 h-5 bg-primary rounded-[2px] z-30 shadow-[0_0_12px_rgba(59,130,246,0.6)]"></div>
+              <div className="absolute bottom-[4px] left-[4px] w-5 h-5 bg-charcoal-light border border-white/10 rounded-[2px] z-10"></div>
+              <div className="absolute bottom-0 right-[4px] w-5 h-5 bg-white/5 rounded-[2px] z-0"></div>
+            </div>
+            <span className="text-2xl font-bold text-white">Relvanta</span>
           </div>
 
+          <h1 className="text-xl font-bold text-white mb-2">Welcome back</h1>
+          <p className="text-white/50 text-sm mb-8">
+            Access your personalized AI dashboard and experimental labs.
+          </p>
+
           {error && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-              <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+              <p className="text-sm text-red-400">{error}</p>
             </div>
           )}
 
           <button
             onClick={handleGoogleLogin}
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 rounded-lg transition-colors font-semibold text-gray-900 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-3 px-6 py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-xl transition-all font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            data-testid="google-signin-btn"
           >
             {isLoading ? (
               <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
                 <span>Signing in...</span>
               </>
             ) : (
@@ -124,23 +141,26 @@ function LoginForm() {
             )}
           </button>
 
-          <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-            <p>
-              By signing in, you agree to our Terms of Service and Privacy Policy.
-            </p>
-          </div>
+          <p className="mt-6 text-center text-xs text-white/30">
+            By signing in, you agree to our Terms of Service and Privacy Policy.
+          </p>
 
           {/* Configuration Notice */}
           {!process.env.NEXT_PUBLIC_FIREBASE_API_KEY && (
-            <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-              <p className="text-xs text-yellow-800 dark:text-yellow-200">
+            <div className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
+              <p className="text-xs text-yellow-400">
                 <strong>Configuration Required:</strong> Firebase credentials are not set.
-                Please update <code>.env.local</code> with your Firebase configuration.
-                See <code>.env.example</code> for required variables.
+                Please update <code className="bg-white/10 px-1 rounded">.env.local</code> with your Firebase configuration.
               </p>
             </div>
           )}
         </div>
+      </div>
+
+      {/* System Status */}
+      <div className="flex items-center justify-center gap-2">
+        <div className="size-2 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.8)]"></div>
+        <span className="text-xs text-white/40">Secure authentication powered by Firebase</span>
       </div>
     </div>
   );
@@ -150,7 +170,7 @@ export default function LoginPage() {
   return (
     <Suspense fallback={
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     }>
       <LoginForm />
