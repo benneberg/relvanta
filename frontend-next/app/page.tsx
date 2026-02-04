@@ -173,7 +173,7 @@ export default async function HomePage() {
           <h3 className="text-sm font-semibold text-white tracking-wide">Why Relvanta?</h3>
         </div>
 
-        <div className="bg-charcoal-surface !bg-charcoal-surface rounded-3xl p-6 border border-glass-border shadow-xl">
+        <div className="relvanta-card rounded-3xl p-6 border border-glass-border shadow-xl">
           <div className="grid md:grid-cols-3 gap-6">
             <div className="text-center p-4">
               <div className="size-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
@@ -205,10 +205,10 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
- <div className="relative flex flex-col justify-center py-16 md:py-24 
+      <div className="relative flex flex-col justify-center py-16 md:py-24 
         relvanta-card rounded-[1rem] border border-glass-border shadow-2xl  overflow-hidden">
       Title
-        </div>
+      </div>
       {/* CTA Section */}
       <section className="relvanta-card rounded-3xl p-8 border border-glass-border text-center" data-testid="cta-section">
         <h2 className="text-xl md:text-2xl font-bold text-white mb-3">Ready to Transform Your Business?</h2>
@@ -237,7 +237,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
   return (
     <Link 
       href={`/services/${service.slug}`}
-      className="w-[280px] bg-charcoal-surface rounded-2xl p-6 border border-glass-border hover:border-primary/30 transition-all group cursor-pointer"
+      className="w-[280px] relvanta-card rounded-2xl p-6 border border-glass-border hover:border-primary/30 transition-all group cursor-pointer"
       data-testid={`service-card-${service.slug}`}
     >
       <div className="size-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
