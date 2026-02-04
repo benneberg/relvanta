@@ -24,7 +24,7 @@ export default function AboutPage() {
       </section>
 
       {/* Mission */}
-      <section className="bg-charcoal-surface rounded-2xl p-6 border border-glass-border" data-testid="about-mission">
+      <section className="relvanta-card rounded-2xl p-6 border border-glass-border" data-testid="about-mission">
         <div className="flex items-center gap-3 mb-4">
           <div className="size-10 bg-primary/10 rounded-xl flex items-center justify-center">
             <span className="material-symbols-outlined text-primary">rocket_launch</span>
@@ -39,7 +39,7 @@ export default function AboutPage() {
       </section>
 
       {/* Approach */}
-      <section className="bg-charcoal-surface rounded-2xl p-6 border border-glass-border" data-testid="about-approach">
+      <section className="relvanta-card rounded-2xl p-6 border border-glass-border" data-testid="about-approach">
         <div className="flex items-center gap-3 mb-4">
           <div className="size-10 bg-green-500/10 rounded-xl flex items-center justify-center">
             <span className="material-symbols-outlined text-green-500">psychology</span>
@@ -60,7 +60,7 @@ export default function AboutPage() {
         </div>
         
         <div className="grid md:grid-cols-2 gap-4">
-          <div className="bg-charcoal-surface rounded-2xl p-5 border border-glass-border">
+          <div className="relvanta-card rounded-2xl p-5 border border-glass-border">
             <div className="flex items-center gap-3 mb-3">
               <div className="size-8 bg-blue-500/10 rounded-lg flex items-center justify-center">
                 <span className="material-symbols-outlined text-blue-500 text-lg">engineering</span>
@@ -72,7 +72,7 @@ export default function AboutPage() {
             </p>
           </div>
           
-          <div className="bg-charcoal-surface rounded-2xl p-5 border border-glass-border">
+          <div className="relvanta-card rounded-2xl p-5 border border-glass-border">
             <div className="flex items-center gap-3 mb-3">
               <div className="size-8 bg-amber-500/10 rounded-lg flex items-center justify-center">
                 <span className="material-symbols-outlined text-amber-500 text-lg">visibility</span>
@@ -84,7 +84,7 @@ export default function AboutPage() {
             </p>
           </div>
           
-          <div className="bg-charcoal-surface rounded-2xl p-5 border border-glass-border">
+          <div className="relvanta-card rounded-2xl p-5 border border-glass-border">
             <div className="flex items-center gap-3 mb-3">
               <div className="size-8 bg-green-500/10 rounded-lg flex items-center justify-center">
                 <span className="material-symbols-outlined text-green-500 text-lg">handshake</span>
@@ -96,7 +96,7 @@ export default function AboutPage() {
             </p>
           </div>
           
-          <div className="bg-charcoal-surface rounded-2xl p-5 border border-glass-border">
+          <div className="relvanta-card rounded-2xl p-5 border border-glass-border">
             <div className="flex items-center gap-3 mb-3">
               <div className="size-8 bg-purple-500/10 rounded-lg flex items-center justify-center">
                 <span className="material-symbols-outlined text-purple-500 text-lg">lightbulb</span>
@@ -111,7 +111,7 @@ export default function AboutPage() {
       </section>
 
       {/* Team */}
-      <section className="bg-charcoal-surface rounded-2xl p-6 border border-glass-border" data-testid="about-team">
+      <section className="relvanta-card rounded-2xl p-6 border border-glass-border" data-testid="about-team">
         <div className="flex items-center gap-3 mb-4">
           <div className="size-10 bg-cyan-500/10 rounded-xl flex items-center justify-center">
             <span className="material-symbols-outlined text-cyan-500">groups</span>
@@ -126,7 +126,7 @@ export default function AboutPage() {
       </section>
 
       {/* Contact CTA */}
-      <section className="bg-charcoal-surface rounded-3xl p-8 border border-glass-border text-center" data-testid="about-cta">
+      <section className="relvanta-card rounded-3xl p-8 border border-glass-border text-center" data-testid="about-cta">
         <h3 className="text-xl font-bold text-white mb-3">Let&apos;s Talk</h3>
         <p className="text-gray-400 text-sm mb-6 max-w-md mx-auto">
           Ready to explore how AI can transform your business?
