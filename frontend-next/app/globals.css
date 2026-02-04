@@ -42,7 +42,7 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
+.border { border:1px solid rgba(255, 255, 255, 0.1);}
 /* Liquid Glass Effect */
 .liquid-glass {
   background: rgba(11, 12, 14, 0.7);
