@@ -217,7 +217,7 @@ export default async function HomePage() {
         </p>
         <Link
           href="/services"
-          className="inline-block px-8 py-3 bg-primary hover:bg-primary/90 rounded-full text-white text-sm font-medium transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]"
+          className="inline-block px-8 py-3 bg-white hover:bg-white/90 rounded-full text-black text-sm font-medium transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_4px rgba(240,240,246,0.5)]
           data-testid="cta-get-started-btn"
         >
           Get Started
