@@ -26,11 +26,7 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col gap-10 px-6 py-8 max-w-6xl mx-auto">
-        <div className="relative flex flex-col justify-center py-16 md:py-24 
-        relvanta-card  border border-glass-border overflow-hidden">
-      test
-        </div>
-      
+       
       {/* HeroSection */} 
       <section className="flex flex-col gap-6" data-testid="hero-section">
         <div className="relative flex flex-col items-center justify-center py-16 md:py-24 bg-charcoal-surface rounded-[1rem] border border-glass-border shadow-2xl overflow-hidden">
@@ -209,9 +205,12 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
+ <div className="relative flex flex-col justify-center py-16 md:py-24 
+        relvanta-card rounded-[1rem] border border-glass-border shadow-2xl  overflow-hidden">
+      Title
+        </div>
       {/* CTA Section */}
-      <section className="bg-charcoal-surface rounded-3xl p-8 border border-glass-border text-center" data-testid="cta-section">
+      <section className="relvanta-card rounded-3xl p-8 border border-glass-border text-center" data-testid="cta-section">
         <h2 className="text-xl md:text-2xl font-bold text-white mb-3">Ready to Transform Your Business?</h2>
         <p className="text-gray-400 text-sm mb-6 max-w-md mx-auto">
           Schedule a consultation to explore how Relvanta can help you achieve your AI goals.
