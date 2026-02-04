@@ -50,8 +50,8 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-display antialiased selection:bg-primary/30">
-        <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-charcoal-dark">
+      <body className="bg-black text-white font-display antialiased selection:bg-primary/30">
+        <div className="relative main-wrapper flex min-h-screen w-full flex-col overflow-x-hidden shadow-2xl sm:my-8 sm:rounded-[2.5rem] border-x border-white/5 ring-1 ring-white/5">
           <Header />
           <main className="flex-1 mobile-pb">{children}</main>
           <Footer />
