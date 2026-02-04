@@ -259,7 +259,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
 
 function PlaceholderServiceCard({ title, icon, status }: { title: string; icon: string; status: string }) {
   return (
-    <div className="w-[280px] bg-charcoal-surface rounded-2xl p-6 border border-glass-border hover:border-primary/30 transition-all group cursor-pointer">
+    <div className=" w-[280px] rounded-2xl p-6 border border-glass-border hover:border-primary/30 transition-all group cursor-pointer">
       <div className="size-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
         <span className="material-symbols-outlined text-primary text-2xl">{icon}</span>
       </div>
