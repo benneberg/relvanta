@@ -28,7 +28,7 @@ export default async function HomePage() {
     <div className="flex flex-col gap-10 px-6 py-8 max-w-6xl mx-auto">
         <div className="relative flex flex-col justify-center py-16 md:py-24 bg-charcoal-surface  border border-glass-border overflow-hidden">
       test
-        </div
+        </div>
       
       {/* HeroSection */} 
       <section className="flex flex-col gap-6" data-testid="hero-section">
