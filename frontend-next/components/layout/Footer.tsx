@@ -6,31 +6,39 @@ export default function Footer() {
   const footerSections = getFooterNavigation();
 
   return (
-    <footer className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <footer className="hidden md:block bg-charcoal-surface border-t border-white/5">
+      <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid md:grid-cols-4 gap-8">
           {/* Company */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-              Relvanta
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Empowering medium-sized businesses with cutting-edge AI solutions.
+            <div className="flex items-center gap-3 mb-4">
+              {/* Logo Mark */}
+              <div className="relative w-6 h-6">
+                <div className="absolute top-0 left-0 w-3 h-3 bg-white/20 rounded-[2px] z-20"></div>
+                <div className="absolute top-[2px] right-0 w-3 h-3 bg-primary rounded-[2px] z-30"></div>
+                <div className="absolute bottom-[2px] left-[2px] w-3 h-3 bg-charcoal-light border border-white/10 rounded-[2px] z-10"></div>
+                <div className="absolute bottom-0 right-[2px] w-3 h-3 bg-white/5 rounded-[2px] z-0"></div>
+              </div>
+              <span className="text-lg font-bold text-white">Relvanta</span>
+            </div>
+            <p className="text-white/40 text-sm leading-relaxed">
+              Effortless AI integration for business automation. Empowering medium-sized businesses with cutting-edge solutions.
             </p>
           </div>
 
           {/* Dynamic Navigation Sections */}
           {footerSections.map((section) => (
             <div key={section.title}>
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
+              <h3 className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-4">
                 {section.title}
               </h3>
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
+                      className="text-white/40 hover:text-white text-sm transition-colors"
+                      data-testid={`footer-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
                     >
                       {link.name}
                     </Link>
@@ -41,22 +49,21 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+        <div className="mt-12 pt-8 border-t border-white/5">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-white/30 text-sm">
               © {currentYear} Relvanta AB. All rights reserved.
             </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
+            <div className="flex items-center gap-4">
               <a
                 href="mailto:hello@relvanta.com"
-                className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors"
+                className="text-white/40 hover:text-white text-sm transition-colors"
+                data-testid="footer-contact-email"
               >
-                Contact
+                hello@relvanta.com
               </a>
-              <span className="text-gray-400 dark:text-gray-600">•</span>
-              <span className="text-gray-600 dark:text-gray-400 text-sm">
-                Stockholm, Sweden
-              </span>
+              <span className="text-white/20">•</span>
+              <span className="text-white/40 text-sm">Stockholm, Sweden</span>
             </div>
           </div>
         </div>
