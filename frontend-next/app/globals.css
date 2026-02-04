@@ -8,7 +8,7 @@
     --color-glass-border: rgba(255, 255, 255, 0.08);
     --color-glass-surface: rgba(255, 255, 255, 0.03);
     --color-primary: #3b82f6;
-    --color-text-primary: #ffffff;
+    --color-text-primary: #f1f1f1;
     --color-text-secondary: rgba(255, 255, 255, 0.6);
     --color-text-muted: rgba(255, 255, 255, 0.4);
   }
@@ -69,7 +69,10 @@ background: #16181D;
     rgba(255, 255, 255, 0.1) 50%, 
     transparent);
 }
-
+.btn .white {
+  background: #f2f2f2;
+  color: #0B0C0E;
+}
 /* Smooth scroll for horizontal sections */
 .smooth-scroll {
   scroll-behavior: smooth;
