@@ -18,6 +18,12 @@
   html {
     scroll-behavior: smooth;
   }
+
+  /* Reset anchor styles */
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
 }
 
 body {
