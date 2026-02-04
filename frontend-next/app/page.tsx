@@ -29,7 +29,7 @@ export default async function HomePage() {
        
       {/* HeroSection */} 
       <section className="flex flex-col gap-6" data-testid="hero-section">
-        <div className="relative flex flex-col items-center justify-center py-16 md:py-24 bg-charcoal-surface rounded-[1rem] border border-glass-border shadow-2xl overflow-hidden">
+        <div className="relative flex flex-col items-center justify-center py-16 md:py-24 relvanta-card  rounded-[1rem] border border-glass-border shadow-2xl overflow-hidden">
           {/* Background effects */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none"></div>
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pulse-glow"></div>
@@ -287,7 +287,7 @@ function ProductCard({ product }: { product: Product }) {
   return (
     <Link 
       href={`/products/${product.slug}`}
-      className="product-card-hover relative bg-charcoal-surface rounded-2xl p-5 border border-glass-border overflow-hidden group cursor-pointer"
+      className="product-card-hover relative relvanta-card  rounded-2xl p-5 border border-glass-border overflow-hidden group cursor-pointer"
       data-testid={`product-card-${product.slug}`}
     >
       {/* Colored top border */}
@@ -342,7 +342,7 @@ function PlaceholderProductCard({
   const c = colorClasses[color];
 
   return (
-    <div className="product-card-hover relative bg-charcoal-surface rounded-2xl p-5 border border-glass-border overflow-hidden group cursor-pointer">
+    <div className="product-card-hover relative relvanta-card rounded-2xl p-5 border border-glass-border overflow-hidden group cursor-pointer">
       <div className={`top-border absolute top-0 left-0 w-full h-0.5 ${c.border}`}></div>
       
       <div className="flex items-start gap-4">
