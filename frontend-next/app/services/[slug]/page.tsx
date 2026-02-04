@@ -4,20 +4,17 @@ import { Service } from '@/lib/schemas';
 import MDXRenderer from '@/components/content/MDXRenderer';
 import Link from 'next/link';
 
-export const revalidate = 60; // ISR: Revalidate every 60 seconds
-export const dynamicParams = true; // Generate pages on-demand if not pre-rendered
+export const revalidate = 60;
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  // During build, the API might not be accessible
-  // Return empty array to skip static generation at build time
-  // Pages will be generated on-demand with ISR
   try {
     const { services } = await getServices({ visibility: 'public' });
     return services.map((service) => ({
       slug: service.slug,
     }));
   } catch (error) {
-    console.warn('Could not fetch services during build, will generate on-demand:', error);
+    console.warn('Could not fetch services during build:', error);
     return [];
   }
 }
@@ -51,7 +48,6 @@ export default async function ServiceDetailPage({
     notFound();
   }
 
-  // Fetch related services if IDs exist
   let relatedServices: Service[] = [];
   if (service.related_services && service.related_services.length > 0) {
     try {
@@ -65,119 +61,125 @@ export default async function ServiceDetailPage({
   }
 
   return (
-    <div className="py-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <nav className="mb-8 text-sm text-gray-600 dark:text-gray-400">
-          <Link href="/services" className="hover:text-blue-600 dark:hover:text-blue-400">
-            Services
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-gray-900 dark:text-white">{service.name}</span>
-        </nav>
+    <div className="flex flex-col gap-8 px-6 py-8 max-w-4xl mx-auto">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-sm" data-testid="service-breadcrumb">
+        <Link href="/services" className="text-white/40 hover:text-white transition-colors flex items-center gap-1">
+          <span className="material-symbols-outlined text-lg">arrow_back</span>
+          Services
+        </Link>
+        <span className="text-white/20">/</span>
+        <span className="text-white/60">{service.name}</span>
+      </nav>
 
-        {/* Header */}
-        <div className="mb-12">
-          <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold rounded-full mb-4 uppercase">
+      {/* Header */}
+      <section className="bg-charcoal-surface rounded-3xl p-8 border border-glass-border relative overflow-hidden" data-testid="service-header">
+        <div className="absolute -top-20 -left-20 w-64 h-64 bg-green-500/10 rounded-full blur-[80px]"></div>
+        
+        <div className="relative z-10">
+          <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full border border-primary/20 uppercase mb-4">
             {service.engagement_type}
           </span>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4" data-testid="service-title">
             {service.name}
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-white/70 leading-relaxed mb-4">
             {service.summary}
           </p>
 
-          {/* Duration */}
           {service.duration && (
-            <p className="text-lg text-gray-700 dark:text-gray-300">
-              <strong>Duration:</strong> {service.duration}
-            </p>
+            <div className="flex items-center gap-2 text-white/50 text-sm">
+              <span className="material-symbols-outlined text-lg">schedule</span>
+              <span>Duration: {service.duration}</span>
+            </div>
           )}
         </div>
+      </section>
 
-        {/* Main Content */}
-        <div className="mb-12">
+      {/* Main Content */}
+      <section className="bg-charcoal-surface rounded-2xl p-6 border border-glass-border" data-testid="service-content">
+        <div className="prose prose-invert prose-sm max-w-none">
           <MDXRenderer content={service.description} />
         </div>
+      </section>
 
-        {/* Deliverables */}
-        {service.deliverables && service.deliverables.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Deliverables
-            </h2>
-            <ul className="space-y-3">
-              {service.deliverables.map((deliverable, idx) => (
-                <li key={idx} className="flex items-start">
-                  <svg
-                    className="w-6 h-6 text-green-500 mr-3 flex-shrink-0 mt-1"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700 dark:text-gray-300">{deliverable}</span>
-                </li>
-              ))}
-            </ul>
+      {/* Scope */}
+      {service.scope && service.scope.length > 0 && (
+        <section className="bg-charcoal-surface rounded-2xl p-6 border border-glass-border" data-testid="service-scope">
+          <h3 className="text-sm font-semibold text-white tracking-wide mb-4">Scope</h3>
+          <div className="space-y-3">
+            {service.scope.map((item, idx) => (
+              <div key={idx} className="flex items-start gap-3">
+                <div className="size-2 bg-primary rounded-full shadow-[0_0_8px_rgba(59,130,246,0.6)] mt-2"></div>
+                <span className="text-white/70 text-sm">{item}</span>
+              </div>
+            ))}
           </div>
-        )}
+        </section>
+      )}
 
-        {/* Related Services */}
-        {relatedServices.length > 0 && (
-          <div className="mb-12 pb-12 border-b border-gray-200 dark:border-gray-800">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              Related Services
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {relatedServices.map((relatedService) => (
-                <Link
-                  key={relatedService.id}
-                  href={`/services/${relatedService.slug}`}
-                  className="group block p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-all"
-                >
-                  <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold rounded-full mb-3 uppercase">
-                    {relatedService.engagement_type}
-                  </span>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {relatedService.name}
-                  </h3>
-                  <p className="text-gray-700 dark:text-gray-300 line-clamp-2">
-                    {relatedService.summary}
-                  </p>
-                  {relatedService.duration && (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                      Duration: {relatedService.duration}
-                    </p>
-                  )}
-                </Link>
-              ))}
-            </div>
+      {/* Deliverables */}
+      {service.deliverables && service.deliverables.length > 0 && (
+        <section className="bg-charcoal-surface rounded-2xl p-6 border border-glass-border" data-testid="service-deliverables">
+          <h3 className="text-sm font-semibold text-white tracking-wide mb-4">Deliverables</h3>
+          <div className="space-y-3">
+            {service.deliverables.map((deliverable, idx) => (
+              <div key={idx} className="flex items-start gap-3">
+                <div className="size-5 bg-green-500/10 rounded flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="material-symbols-outlined text-green-500 text-sm">check</span>
+                </div>
+                <span className="text-white/70 text-sm">{deliverable}</span>
+              </div>
+            ))}
           </div>
-        )}
+        </section>
+      )}
 
-        {/* CTA */}
-        <div className="mt-12 p-8 bg-blue-50 dark:bg-gray-800 rounded-xl text-center">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Ready to Get Started?
-          </h3>
-          <p className="text-gray-700 dark:text-gray-300 mb-6">
-            Contact our team to discuss your needs and how we can help.
-          </p>
-          <a
-            href={`mailto:hello@relvanta.com?subject=Inquiry about ${service.name}`}
-            className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
-          >
-            Contact Us
-          </a>
-        </div>
-      </div>
+      {/* Related Services */}
+      {relatedServices.length > 0 && (
+        <section className="space-y-4" data-testid="related-services">
+          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+            <h3 className="text-sm font-semibold text-white tracking-wide">Related Services</h3>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {relatedServices.map((relatedService) => (
+              <Link
+                key={relatedService.id}
+                href={`/services/${relatedService.slug}`}
+                className="product-card-hover bg-charcoal-surface rounded-2xl p-5 border border-glass-border group"
+                data-testid={`related-service-${relatedService.slug}`}
+              >
+                <span className="inline-block px-2 py-0.5 bg-white/5 text-white/50 text-[10px] rounded-full uppercase tracking-wider mb-3">
+                  {relatedService.engagement_type}
+                </span>
+                <h4 className="text-white font-semibold mb-2 group-hover:text-primary transition-colors">
+                  {relatedService.name}
+                </h4>
+                <p className="text-sm text-white/60 line-clamp-2 mb-3">{relatedService.summary}</p>
+                {relatedService.duration && (
+                  <p className="text-xs text-white/30">Duration: {relatedService.duration}</p>
+                )}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* CTA */}
+      <section className="bg-charcoal-surface rounded-3xl p-8 border border-glass-border text-center" data-testid="service-cta">
+        <h3 className="text-xl font-bold text-white mb-3">Ready to Get Started?</h3>
+        <p className="text-gray-400 text-sm mb-6 max-w-md mx-auto">
+          Contact our team to discuss your needs and how we can help.
+        </p>
+        <a
+          href={`mailto:hello@relvanta.com?subject=Inquiry about ${service.name}`}
+          className="inline-block px-8 py-3 bg-primary hover:bg-primary/90 rounded-full text-white text-sm font-medium transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+          data-testid="service-contact-btn"
+        >
+          Contact Us
+        </a>
+      </section>
     </div>
   );
 }
