@@ -176,7 +176,7 @@ export default async function HomePage() {
           <h3 className="text-sm font-semibold text-white tracking-wide">Why Relvanta?</h3>
         </div>
 
-        <div className="bg-charcoal-surface rounded-3xl p-6 border border-glass-border shadow-xl">
+        <div className="bg-charcoal-surface !bg-charcoal-surface rounded-3xl p-6 border border-glass-border shadow-xl">
           <div className="grid md:grid-cols-3 gap-6">
             <div className="text-center p-4">
               <div className="size-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-4">
