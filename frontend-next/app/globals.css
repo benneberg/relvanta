@@ -160,6 +160,9 @@ body {
 }
 
 /* Product card hover effect */
+.product-card {
+  background: #16181D;
+}
 .product-card-hover {
   transition: all 0.4s ease;
 }
