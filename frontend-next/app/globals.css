@@ -4,29 +4,39 @@
 
 @layer base {
   :root {
-    /* Charcoal Dark Palette */
     --color-charcoal-dark: #0B0C0E;
     --color-charcoal-surface: #16181D;
     --color-charcoal-light: #23262F;
     --color-glass-border: rgba(255, 255, 255, 0.08);
     --color-glass-surface: rgba(255, 255, 255, 0.03);
-    
-    /* Primary */
     --color-primary: #3b82f6;
-    
-    /* Text Colors */
     --color-text-primary: #ffffff;
     --color-text-secondary: rgba(255, 255, 255, 0.6);
     --color-text-muted: rgba(255, 255, 255, 0.4);
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
+  min-height: 100dvh;
+  background-color: #050505;
   color: var(--color-text-primary);
-  background-color: var(--color-charcoal-dark);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide scrollbar utilities */
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Liquid Glass Effect */
@@ -34,7 +44,7 @@ body {
   background: rgba(11, 12, 14, 0.7);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--color-glass-border);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 
     0 8px 32px 0 rgba(0, 0, 0, 0.4),
     inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
@@ -53,7 +63,13 @@ body {
     transparent);
 }
 
-/* Smooth Animations */
+/* Smooth scroll for horizontal sections */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Animations */
 @keyframes scaleIn {
   from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
@@ -62,6 +78,11 @@ body {
 @keyframes slideIn {
   from { transform: translateX(-100%); opacity: 0; }
   to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes pulse-glow {
@@ -77,14 +98,31 @@ body {
   animation: slideIn 0.8s ease-out forwards;
 }
 
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
 .pulse-glow {
   animation: pulse-glow 3s ease-in-out infinite;
 }
 
-/* Custom Scrollbar */
+/* Staggered animation delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+
+/* Bottom nav indicator transition */
+.nav-indicator {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom scrollbar for desktop */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -93,36 +131,52 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-charcoal-light);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Hide scrollbar for horizontal scroll sections */
-.hide-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.hide-scroll {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Selection */
+/* Selection styling */
 ::selection {
   background-color: rgba(59, 130, 246, 0.3);
   color: #ffffff;
 }
 
-/* Mobile Bottom Navigation Padding */
+/* Mobile bottom navigation padding */
 .mobile-pb {
-  padding-bottom: 5rem;
+  padding-bottom: 6rem;
 }
 
 @media (min-width: 768px) {
   .mobile-pb {
     padding-bottom: 2rem;
   }
+}
+
+/* Product card hover effect */
+.product-card-hover {
+  transition: all 0.4s ease;
+}
+
+.product-card-hover:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.product-card-hover .top-border {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s ease;
+}
+
+.product-card-hover:hover .top-border {
+  transform: scaleX(1);
+}
+
+/* Grid pattern background */
+.grid-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
