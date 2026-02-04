@@ -79,7 +79,7 @@ function LoginForm() {
       </div>
 
       {/* Login Card */}
-      <div className="bg-charcoal-surface rounded-3xl p-8 border border-glass-border relative overflow-hidden">
+      <div className="relvanta-card rounded-3xl p-8 border border-glass-border relative overflow-hidden">
         <div className="absolute -top-20 -right-20 w-48 h-48 bg-primary/10 rounded-full blur-[60px]"></div>
         
         <div className="relative z-10">
