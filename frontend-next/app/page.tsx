@@ -26,7 +26,8 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col gap-10 px-6 py-8 max-w-6xl mx-auto">
-        <div className="relative flex flex-col justify-center py-16 md:py-24 bg-charcoal-surface/20  border border-glass-border overflow-hidden">
+        <div className="relative flex flex-col justify-center py-16 md:py-24 
+        relvanta-card  border border-glass-border overflow-hidden">
       test
         </div>
       
