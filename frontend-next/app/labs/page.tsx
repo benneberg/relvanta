@@ -38,7 +38,7 @@ export default async function LabsPage() {
           <h2 className="text-white/60 text-xs font-semibold tracking-[0.2em] uppercase">Labs</h2>
         </div>
         
-        <div className="bg-charcoal-surface rounded-3xl p-8 border border-glass-border relative overflow-hidden">
+        <div className="relvanta-card rounded-3xl p-8 border border-glass-border relative overflow-hidden">
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-yellow-500/10 rounded-full blur-[80px]"></div>
           <div className="relative z-10 flex items-start justify-between">
             <div>
@@ -116,7 +116,7 @@ export default async function LabsPage() {
         </div>
 
         {labs.length === 0 && (
-          <div className="bg-charcoal-surface rounded-2xl p-12 border border-glass-border text-center">
+          <div className="relvanta-card rounded-2xl p-12 border border-glass-border text-center">
             <span className="material-symbols-outlined text-4xl text-white/20 mb-4">science</span>
             <p className="text-gray-400 text-sm">No active experiments at the moment. Check back soon for new innovations!</p>
           </div>
