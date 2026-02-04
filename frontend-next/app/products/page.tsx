@@ -28,7 +28,7 @@ export default async function ProductsPage() {
           <h2 className="text-white/60 text-xs font-semibold tracking-[0.2em] uppercase">Products</h2>
         </div>
         
-        <div className="bg-charcoal-surface rounded-3xl p-8 border border-glass-border relative overflow-hidden">
+        <div className="relvanta-card rounded-3xl p-8 border border-glass-border relative overflow-hidden">
           <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-[80px]"></div>
           <div className="relative z-10">
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">AI Products</h1>
@@ -53,7 +53,7 @@ export default async function ProductsPage() {
         </div>
 
         {activeProducts.length === 0 && (
-          <div className="bg-charcoal-surface rounded-2xl p-12 border border-glass-border text-center">
+          <div className="relvanta-card rounded-2xl p-12 border border-glass-border text-center">
             <span className="material-symbols-outlined text-4xl text-white/20 mb-4">inventory_2</span>
             <p className="text-gray-400 text-sm">No products available at the moment. Check back soon!</p>
           </div>
@@ -61,7 +61,7 @@ export default async function ProductsPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-charcoal-surface rounded-3xl p-8 border border-glass-border text-center" data-testid="products-cta">
+      <section className="relvanta-card rounded-3xl p-8 border border-glass-border text-center" data-testid="products-cta">
         <h2 className="text-xl font-bold text-white mb-3">Need a Custom Solution?</h2>
         <p className="text-gray-400 text-sm mb-6 max-w-md mx-auto">
           Our team can build tailored AI solutions for your specific business needs.
@@ -82,7 +82,7 @@ function ProductCard({ product }: { product: Product }) {
   return (
     <Link 
       href={`/products/${product.slug}`}
-      className="product-card-hover relative bg-charcoal-surface rounded-2xl p-6 border border-glass-border overflow-hidden group"
+      className="product-card-hover relative relvanta-card rounded-2xl p-6 border border-glass-border overflow-hidden group"
       data-testid={`product-card-${product.slug}`}
     >
       {/* Colored top border */}
