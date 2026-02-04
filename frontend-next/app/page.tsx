@@ -106,7 +106,7 @@ export default async function HomePage() {
         <div className="overflow-x-auto smooth-scroll hide-scroll px-6">
           <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
             {services.slice(0, 4).map((service, index) => (
-              <ServiceCard key={service.id} className="bg-charcoal-surface rounded-2xl p-6 border border-glass-border hover:border-primary/30 transition-all group cursor-pointer" service={service} index={index} />
+              <ServiceCard key={service.id} service={service} index={index} />
             ))}
             {services.length === 0 && (
               <>
