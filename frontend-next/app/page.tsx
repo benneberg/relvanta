@@ -306,7 +306,7 @@ function ProductCard({ product }: { product: Product }) {
             {product.name.charAt(0)}
           </span>
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 bg-white/5 hover:bg-white/10">
           <h4 className="text-white font-semibold mb-1">{product.name}</h4>
           <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2 font-mono">by Relvanta</p>
           {product.tagline && (
