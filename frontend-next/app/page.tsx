@@ -60,7 +60,7 @@ export default async function HomePage() {
           <div className="mt-8 flex flex-col sm:flex-row gap-4 z-10 relative">
             <Link 
               href="/products"
-              className="px-8 py-3 btn btn-white rounded-full text-sm font-medium transition-all"
+              className="px-8 py-3 btn white rounded-full text-sm font-medium transition-all"
               data-testid="hero-explore-btn"
             >
               Explore Products
@@ -217,7 +217,7 @@ export default async function HomePage() {
         </p>
         <Link
           href="/services"
-          className="inline-block px-8 py-3 btn btn-white hover:bg-white/90 rounded-full text-sm font-medium transition-all" 
+          className="inline-block px-8 py-3 btn white hover:bg-white/90 rounded-full text-sm font-medium transition-all" 
           data-testid="cta-get-started-btn"
         >
           Get Started
