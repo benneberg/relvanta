@@ -67,7 +67,7 @@ export default async function HomePage() {
             </Link>
             <Link
               href="/services"
-              className="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white text-sm font-medium transition-all"
+              className="px-8 py-3 bg-white/10 hover:bg-white/7 border border-white/10 rounded-full text-black text-sm font-medium transition-all"
               data-testid="hero-services-btn"
             >
               View Services
