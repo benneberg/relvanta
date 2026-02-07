@@ -2,10 +2,6 @@
 
 A comprehensive AI solutions platform showcasing products, services, and experimental labs for medium-sized businesses.
 
-## Architecture Overview
-
-**Emergent-Independent Full-Stack Application:**
-- **Frontend**: Next.js 14+ with App Router (TypeScript + Tailwind CSS)
 - **Backend**: FastAPI with MongoDB
 - **Authentication**: Firebase Authentication (Google OAuth)
 - **Database**: MongoDB (local or MongoDB Atlas)
@@ -43,16 +39,7 @@ A comprehensive AI solutions platform showcasing products, services, and experim
 │   │   ├── services/         # Services (ISR)
 │   │   ├── labs/             # Labs (SSR, auth)
 │   │   ├── private/          # Dashboard (SSR, auth)
-│   │   ├── login/            # Auth page
-│   │   └── about/            # About page
-│   ├── components/           # React components
-│   ├── lib/                  # Utilities & API client
-│   └── package.json          # Node dependencies
-│
-└── auth_testing.md           # Auth testing playbook
-```
 
-## Features
 
 ### 🎯 Core Functionality
 

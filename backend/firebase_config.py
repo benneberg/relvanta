@@ -1,4 +1,5 @@
 """Firebase Admin SDK initialization for backend token verification."""
+import base64
 import os
 import json
 import logging
@@ -8,62 +9,33 @@ from firebase_admin import credentials, auth
 
 logger = logging.getLogger(__name__)
 
-_firebase_app = None
+def initialize_firebase():
+    if firebase_admin._apps:
+        return
 
+    # Option 1: JSON via env (recommended)
+    b64_json = os.getenv("FIREBASE_CREDENTIALS_JSON")
+    if b64_json:
+        cred_dict = json.loads(base64.b64decode(b64_json))
+        cred = credentials.Certificate(cred_dict)
+        firebase_admin.initialize_app(cred)
+        logger.info("✅ Firebase initialized using FIREBASE_CREDENTIALS_JSON")
+        return
 
-def initialize_firebase() -> Optional[firebase_admin.App]:
-    """
-    Initialize Firebase Admin SDK.
-    
-    Supports two methods:
-    1. Service account JSON file path (FIREBASE_CREDENTIALS_PATH)
-    2. Service account JSON string (FIREBASE_CREDENTIALS_JSON) - for serverless
-    
-    Returns:
-        Firebase app instance or None if initialization fails
-    """
-    global _firebase_app
-    
-    if _firebase_app is not None:
-        return _firebase_app
-    
-    # Check if already initialized
-    if len(firebase_admin._apps) > 0:
-        _firebase_app = firebase_admin.get_app()
-        return _firebase_app
-    
-    try:
-        # Method 1: Use credentials from file
-        creds_path = os.getenv('FIREBASE_CREDENTIALS_PATH')
-        if creds_path and os.path.exists(creds_path):
-            logger.info(f"Initializing Firebase from file: {creds_path}")
-            cred = credentials.Certificate(creds_path)
-            _firebase_app = firebase_admin.initialize_app(cred)
-            logger.info("✅ Firebase Admin SDK initialized from file")
-            return _firebase_app
-        
-        # Method 2: Use credentials from environment variable (JSON string)
-        creds_json = os.getenv('FIREBASE_CREDENTIALS_JSON')
-        if creds_json:
-            logger.info("Initializing Firebase from environment variable")
-            cred_dict = json.loads(creds_json)
-            cred = credentials.Certificate(cred_dict)
-            _firebase_app = firebase_admin.initialize_app(cred)
-            logger.info("✅ Firebase Admin SDK initialized from JSON")
-            return _firebase_app
-        
-        # No credentials found
-        logger.warning(
-            "⚠️ Firebase credentials not found. "
-            "Set FIREBASE_CREDENTIALS_PATH or FIREBASE_CREDENTIALS_JSON. "
-            "Authentication will not work until configured."
-        )
-        return None
-        
-    except Exception as e:
-        logger.error(f"❌ Firebase initialization failed: {e}")
-        return None
+    # Option 2: Path to file (only useful locally)
+    path = os.getenv("FIREBASE_CREDENTIALS_PATH")
+    if path and os.path.exists(path):
+        cred = credentials.Certificate(path)
+        firebase_admin.initialize_app(cred)
+        logger.info("✅ Firebase initialized using FIREBASE_CREDENTIALS_PATH")
+        return
 
+    # No credentials
+    logger.warning(
+        "⚠️ Firebase credentials not found. "
+        "Set FIREBASE_CREDENTIALS_PATH or FIREBASE_CREDENTIALS_JSON. "
+        "Authentication will not work until configured."
+    )
 
 def verify_firebase_token(id_token: str) -> Optional[dict]:
     """

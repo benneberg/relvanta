@@ -25,9 +25,6 @@ ROOT_DIR = Path(__file__).parent
 if os.getenv("PYTHON_ENV") != "production":
     load_dotenv(ROOT_DIR / ".env")
 
-# Initialize Firebase Admin SDK
-initialize_firebase()
-
 # MongoDB connection
 mongo_url = os.getenv("MONGO_URL")
 db_name = os.getenv("DB_NAME")
@@ -40,6 +37,11 @@ db = client[db_name]
 
 # Create the main app without a prefix
 app = FastAPI(title="Relvanta Platform API")
+
+# Initialize Firebase Admin SDK
+@app.on_event("startup")
+async def startup():
+    initialize_firebase()
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
