@@ -2,14 +2,23 @@ FROM python:3.12.10 AS builder
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
-WORKDIR /app
 
+WORKDIR /app
 
 RUN python -m venv .venv
 COPY requirements.txt ./
-RUN .venv/bin/pip install -r requirements.txt
+RUN .venv/bin/pip install --no-cache-dir -r requirements.txt
+
 FROM python:3.12.10-slim
+
 WORKDIR /app
-COPY --from=builder /app/.venv .venv/
+
+ENV PORT=8000
+ENV PATH="/app/.venv/bin:$PATH"
+
+COPY --from=builder /app/.venv /app/.venv
 COPY . .
-CMD ["/app/.venv/bin/fastapi", "run"]
+
+EXPOSE 8000
+
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
