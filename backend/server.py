@@ -22,7 +22,8 @@ from firebase_config import initialize_firebase, verify_firebase_token
 
 
 ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
+if os.getenv("PYTHON_ENV") != "production":
+    load_dotenv(ROOT_DIR / ".env")
 
 # Initialize Firebase Admin SDK
 initialize_firebase()
