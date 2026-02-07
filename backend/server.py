@@ -504,10 +504,13 @@ async def root():
 app.include_router(api_router)
 
 # CORS middleware
+origins = os.getenv("CORS_ORIGINS")
+allowed_origins = origins.split(",") if origins else []
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=allowed_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
