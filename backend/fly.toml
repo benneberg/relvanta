@@ -6,6 +6,9 @@
 app = 'relvanta-api'
 primary_region = 'arn'
 
+[env]
+  PYTHON_ENV = "production"
+
 [build]
 
 [http_service]
